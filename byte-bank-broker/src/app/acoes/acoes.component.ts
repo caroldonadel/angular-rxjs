@@ -4,7 +4,7 @@ import { Acoes } from './modelo/acoes';
 import { AcoesService } from './acoes.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { merge, Subscription } from 'rxjs';
-import { debounceTime, filter, map, pluck, switchMap, tap } from 'rxjs/operators'
+import { debounceTime, distinct, distinctUntilChanged, filter, map, pluck, switchMap, tap } from 'rxjs/operators'
 
 const ESPERA_DIGITACAO = 300;
 
@@ -23,6 +23,7 @@ export class AcoesComponent {
     debounceTime(ESPERA_DIGITACAO),
     tap(() => console.log("fluxo do filtro")),
     filter( (valorDigitado => valorDigitado.length >= 3 || !valorDigitado.length)),
+    distinctUntilChanged(),
     switchMap((valorDigitado) => this.acoesService.getAcoes(valorDigitado) )
   )
 
